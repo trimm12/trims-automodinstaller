@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Window
 
 ApplicationWindow {
     width: 1920 / 2
@@ -78,8 +79,8 @@ ApplicationWindow {
             border.width: 3
         }
 
-        signal fpButton(msg: string)
-        onClicked: button.fpButton("FilePath Button")
+        onClicked: classA.callMe()
+
 
     }
 }
