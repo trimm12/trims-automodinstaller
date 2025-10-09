@@ -22,7 +22,7 @@ qt_add_qml_module(apptrims_automodinstaller
         RESOURCES
             icons/6700085.png
             SOURCES
-            SOURCES someclass.h someclass.cpp
+            SOURCES signalsclass.h signalsclass.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

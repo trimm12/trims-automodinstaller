@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
+import QtQuick.Dialogs
 
 ApplicationWindow {
     width: 1920 / 2
@@ -52,6 +53,7 @@ ApplicationWindow {
         property bool first_click: false
         id: folder_input
         anchors { horizontalCenter: install_mods_button.horizontalCenter; bottom: install_mods_button.bottom; bottomMargin: -30}
+        anchors.fill: folder_input_border
         text: "Insert Folder Here"
         scale: 1.25
         visible: true;
@@ -79,8 +81,22 @@ ApplicationWindow {
             border.width: 3
         }
 
-        onClicked: classA.callMe()
+        onClicked: {
 
+            classA.callMe()
+            fileDialog.open()
 
     }
+
+    FileDialog {
+        id: fileDialog
+
+        onAccepted: {
+            folder_input.first_click = true
+            console.log(selectedFile)
+            folder_input.text = selectedFile
+        }
+
+    }
+}
 }

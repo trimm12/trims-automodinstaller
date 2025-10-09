@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "someclass.h"
+#include "signalsclass.h"
 
 
 
@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    SomeClass testClass;
+    SignalsClass testClass;
 
     QQmlApplicationEngine engine;
     QObject::connect(
