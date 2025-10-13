@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "signalsclass.h"
+#include <QCoreApplication>
 
 
 
@@ -9,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    SignalsClass testClass;
+    SignalsClass signalsClass;
 
     QQmlApplicationEngine engine;
     QObject::connect(
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
     engine.loadFromModule("trims_automodinstaller", "Main");
 
     QQmlContext * rootContext = engine.rootContext();
-    rootContext->setContextProperty("classA", &testClass) ;
+    rootContext->setContextProperty("signals", &signalsClass) ;
 
     return app.exec();
 }

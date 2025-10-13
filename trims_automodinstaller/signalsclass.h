@@ -1,6 +1,7 @@
 #ifndef SIGNALSCLASS_H
 #define SIGNALSCLASS_H
 
+#include "downloader.h"
 #include <QObject>
 
 class SignalsClass : public QObject
@@ -13,6 +14,12 @@ signals:
 
 public slots:
     void callMe();
+    void download();
+    void variableChange();
+
+private:
+    downloader* d;
+    bool folderChosen;
 
 };
 

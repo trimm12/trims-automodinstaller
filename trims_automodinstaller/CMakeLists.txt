@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -23,6 +24,7 @@ qt_add_qml_module(apptrims_automodinstaller
             icons/6700085.png
             SOURCES
             SOURCES signalsclass.h signalsclass.cpp
+            SOURCES downloader.h downloader.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -39,6 +41,7 @@ set_target_properties(apptrims_automodinstaller PROPERTIES
 target_link_libraries(apptrims_automodinstaller
     PRIVATE Qt6::Quick
 )
+target_link_libraries(apptrims_automodinstaller PRIVATE Qt6::Core)
 target_link_libraries(apptrims_automodinstaller PRIVATE Qt6::Core)
 target_link_libraries(apptrims_automodinstaller PRIVATE Qt6::Core)
 
