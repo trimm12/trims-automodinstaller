@@ -29,6 +29,9 @@ void SignalsClass::download() {
 
 }
 
-void SignalsClass::variableChange() {
+void SignalsClass::variableChange(QString url) {
     folderChosen = true;
+    qDebug() << "variable has been changed" + url;
+    d->changeUrl(url);
+
 }

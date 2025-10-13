@@ -15,7 +15,7 @@ signals:
 public slots:
     void callMe();
     void download();
-    void variableChange();
+    void variableChange(QString url);
 
 private:
     downloader* d;

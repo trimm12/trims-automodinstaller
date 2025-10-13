@@ -19,9 +19,11 @@ public:
 
 public slots:
     void replyFinished(QNetworkReply*);
+    void changeUrl(QString url);
 
 private:
     QNetworkAccessManager* manager;
+    QString folderUrl;
 
 signals:
 };

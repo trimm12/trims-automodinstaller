@@ -96,10 +96,10 @@ ApplicationWindow {
 
         onAccepted: {
             folder_input.first_click = true
-            signals.variableChange()
             var path = selectedFolder.toString().replace("file:///", "")
             console.log(path)
             folder_input.text = path
+            signals.variableChange(path)
         }
 
     }
