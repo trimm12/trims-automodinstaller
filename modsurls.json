@@ -1,0 +1,24 @@
+{
+    "mods": [        
+        {
+        "modID": 1,
+        "name": "Twilight Forest",
+        "jar_name": "twilightforest-1.21.1-4.7.3196-universal.jar",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest/download/6472889",
+        "mc_version": "1.21.1",
+        "mod_version": "4.7.3196",
+        "loader": "NeoForge",
+        "platform": "CurseForge" 
+        },
+        {
+        "modID": 2,
+        "name": "Just Enough Items (JEI)",
+        "jar_name": "jei-1.21.1-neoforge-19.25.0.322",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/jei/download/7057366",
+        "mc_version": "1.21.1",
+        "mod_version": "19.25.0.322",
+        "loader": "NeoForge",
+        "platform": "CurseForge"
+        }
+    ]
+}
