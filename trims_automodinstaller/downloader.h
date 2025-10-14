@@ -20,6 +20,7 @@ public:
 public slots:
     void replyFinished(QNetworkReply*);
     void changeUrl(QString url);
+    // void onResult(QNetworkReply*);
 
 private:
     QNetworkAccessManager* manager;
