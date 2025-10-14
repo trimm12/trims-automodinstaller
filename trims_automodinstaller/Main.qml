@@ -60,7 +60,7 @@ ApplicationWindow {
         text: "Insert Folder Here"
         scale: 1.25
         visible: true;
-        activeFocusOnPress: true
+        activeFocusOnPress: false
 
         onFocusChanged: {
             if(focus) {
