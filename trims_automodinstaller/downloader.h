@@ -21,7 +21,6 @@ public slots:
     void replyFinished(QNetworkReply*);
     void changeFolderUrl(QString url);
     void changeRemoteUrl(QString url);
-    // void onResult(QNetworkReply*);
 
 private:
     QNetworkAccessManager* manager;

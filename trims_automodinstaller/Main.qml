@@ -7,7 +7,7 @@ ApplicationWindow {
     width: 1920 / 2
     height: 1080 / 2
     visible: true
-    title: qsTr("Auto Mod Installer")
+    title: qsTr("trim's AMI")
 
     header: MenuBar {
         Menu {
@@ -22,7 +22,7 @@ ApplicationWindow {
     Button {
         id: install_mods_button
         visible: true;
-        anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 100}
+        anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 200}
         scale: 1
 
         contentItem: Text {
@@ -41,6 +41,29 @@ ApplicationWindow {
         onClicked: {
             signals.download()
         }
+
+    }
+
+    Text {
+        id: debug
+        text: signals.debugText
+        anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 5 }
+    }
+
+    Rectangle {
+        id: title_border
+        width: 720
+        height: 80
+        anchors.centerIn: title
+        border.color: "black"
+        border.width: 3
+    }
+
+    Text {
+        id: title
+        anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 100}
+        scale: 4
+        text: "trim's Auto Mod Installer"
 
     }
 
