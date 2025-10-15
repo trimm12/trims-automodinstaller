@@ -13,11 +13,12 @@ downloader::downloader(QObject *parent)
     folderUrl = "";
     remoteUrl = "";
 
+    manager = new QNetworkAccessManager(this);
+    connect(manager, &QNetworkAccessManager::finished, this, &downloader::replyFinished);
+
 }
 
 void downloader::doDownload() {
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &downloader::replyFinished);
 
     QUrl url(remoteUrl);
     QNetworkRequest request(url);
@@ -38,22 +39,34 @@ void downloader::replyFinished(QNetworkReply* reply) {
 
     QByteArray data = reply->readAll();
 
-    QFile file(folderUrl + "/veinminer.json");
+    QString filename = reply->property("saveName").toString();
+    if (filename.isEmpty()) {
+        filename = "mods.json";
+
+    }
+
+    QFile file(folderUrl + "/" + filename);
     if(file.open(QFile::WriteOnly)) {
         file.write(data);
         file.close();
     }
 
     QJsonDocument document = QJsonDocument::fromJson(data);
-    qDebug() << document;
     QJsonObject root = document.object();
     QJsonArray m_list = root.value("mods").toArray();
     int m_len = m_list.size();
 
     for (int i = 0; i < m_len; i++) {
         QJsonObject m_index = m_list[i].toObject();
-        QJsonValue m_url = m_index.value("url");
+        QString m_url = m_index.value("url").toString();
+        QString m_name = m_index.value("jar_name").toString();
         qDebug() << m_url;
+        qDebug() << m_name;
+
+        QUrl url(m_url);
+        QNetworkRequest request(url);
+        QNetworkReply *reply = manager->get(request);
+        reply->setProperty("saveName", m_name);
     }
 
     reply->deleteLater();
