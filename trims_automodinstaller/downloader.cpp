@@ -11,6 +11,7 @@ downloader::downloader(QObject *parent)
     : QObject{parent}, manager(nullptr)
 {
     folderUrl = "";
+    remoteUrl = "";
 
 }
 
@@ -18,7 +19,7 @@ void downloader::doDownload() {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, &QNetworkAccessManager::finished, this, &downloader::replyFinished);
 
-    QUrl url("https://gist.githubusercontent.com/trimm12/ab8de37dc23e638fc0727c6e8b4a73ec/raw/3653f2ec0585fba11aac54f3e116cef9c9a56cad/modsurls.json");
+    QUrl url(remoteUrl);
     QNetworkRequest request(url);
 
     request.setRawHeader("User-Agent", "Mozilla/5.0");
@@ -58,7 +59,12 @@ void downloader::replyFinished(QNetworkReply* reply) {
     reply->deleteLater();
 }
 
-void downloader::changeUrl(QString url) {
+void downloader::changeFolderUrl(QString url) {
     folderUrl = url;
-    qDebug() << "URL has been changed" + folderUrl;
+    qDebug() << "Received: Folder Url -> " + folderUrl;
+}
+
+void downloader::changeRemoteUrl(QString url) {
+    remoteUrl = url;
+    qDebug() << "Received: Remote Url -> " + remoteUrl;
 }

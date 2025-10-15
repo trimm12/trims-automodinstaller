@@ -62,6 +62,34 @@ ApplicationWindow {
         visible: true;
         activeFocusOnPress: false
 
+        // onFocusChanged: {
+        //     if(focus) {
+        //         if (first_click == false) {
+        //             clear()
+        //             }
+        //     }
+        //     first_click = true
+        // }
+    }
+
+    Rectangle {
+        id: url_input_border
+        width: 480
+        height: 34
+        anchors.centerIn: url_input
+        border.color: "black"
+        border.width: 3
+    }
+
+    TextInput {
+        property bool first_click: false
+        id: url_input
+        anchors { horizontalCenter: install_mods_button.horizontalCenter; bottom: install_mods_button.bottom; bottomMargin: -69}
+        text: "Insert URL here"
+        scale: 1.25
+        visible: true;
+        activeFocusOnPress: true
+
         onFocusChanged: {
             if(focus) {
                 if (first_click == false) {
@@ -69,6 +97,13 @@ ApplicationWindow {
                     }
             }
             first_click = true
+        }
+
+        onAccepted: {
+            var path = text.toString()
+            console.log(path)
+            url_input.text = path
+            signals.remoteChange(path)
         }
     }
 
@@ -99,7 +134,7 @@ ApplicationWindow {
             var path = selectedFolder.toString().replace("file:///", "")
             console.log(path)
             folder_input.text = path
-            signals.variableChange(path)
+            signals.folderChange(path)
         }
 
     }

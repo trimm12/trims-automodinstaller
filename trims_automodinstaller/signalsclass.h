@@ -15,11 +15,13 @@ signals:
 public slots:
     void callMe();
     void download();
-    void variableChange(QString url);
+    void folderChange(QString folderUrl);
+    void remoteChange(QString remoteURL);
 
 private:
     downloader* d;
     bool folderChosen;
+    bool remoteChosen;
 
 };
 

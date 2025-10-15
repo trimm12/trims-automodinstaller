@@ -9,6 +9,7 @@ SignalsClass::SignalsClass(QObject *parent)
     d = new downloader(this);
 
     folderChosen = false;
+    remoteChosen = false;
 
 }
 
@@ -24,14 +25,26 @@ void SignalsClass::download() {
         qDebug() <<"Folder not chosen!";
         return;
     }
+
+    if (!remoteChosen) {
+        qDebug() <<"Url not chosen!";
+        return;
+    }
+
     d->doDownload();
     qDebug() << "Downloading File";
 
 }
 
-void SignalsClass::variableChange(QString url) {
+void SignalsClass::folderChange(QString folderUrl) {
     folderChosen = true;
-    qDebug() << "variable has been changed" + url;
-    d->changeUrl(url);
+    qDebug() << "folder URL has been changed: " + folderUrl;
+    d->changeFolderUrl(folderUrl);
 
+}
+
+void SignalsClass::remoteChange(QString remoteUrl) {
+    remoteChosen = true;
+    qDebug() << "remote URl has been changed: " + remoteUrl;
+    d->changeRemoteUrl(remoteUrl);
 }

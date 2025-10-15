@@ -19,12 +19,14 @@ public:
 
 public slots:
     void replyFinished(QNetworkReply*);
-    void changeUrl(QString url);
+    void changeFolderUrl(QString url);
+    void changeRemoteUrl(QString url);
     // void onResult(QNetworkReply*);
 
 private:
     QNetworkAccessManager* manager;
     QString folderUrl;
+    QString remoteUrl;
 
 signals:
 };
