@@ -11,6 +11,8 @@ SignalsClass::SignalsClass(QObject *parent)
     folderChosen = false;
     remoteChosen = false;
 
+    connect(d, &downloader::debugTextChanged, this, &SignalsClass::debugChange);
+
 }
 
 void SignalsClass::callMe()
@@ -34,7 +36,7 @@ void SignalsClass::download() {
     }
 
     d->doDownload();
-    qDebug() << "Downloading File";
+    qDebug() << "Downloading Files";
 
 }
 

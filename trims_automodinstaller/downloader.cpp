@@ -49,11 +49,10 @@ void downloader::replyFinished(QNetworkReply* reply) {
     int m_len = m_list.size();
 
     for (int i = 0; i < m_len; i++) {
+        completedCount = i;
         QJsonObject m_index = m_list[i].toObject();
         QString m_url = m_index.value("cdn_url").toString();
         QString m_name = m_index.value("jar_name").toString();
-        qDebug() << m_url;
-        qDebug() << m_name;
 
         QUrl url(m_url);
         QNetworkRequest request(url);
@@ -63,6 +62,16 @@ void downloader::replyFinished(QNetworkReply* reply) {
         request.setRawHeader("Referer", "https://www.curseforge.com/");
         QNetworkReply *reply = manager->get(request);
         reply->setProperty("saveName", m_name);
+
+        QObject::connect(reply, &QNetworkReply::finished, this, [this]() {
+            completedCount++;
+        });
+
+        QObject::connect(reply, &QNetworkReply::downloadProgress, this, [this, m_name, reply, m_len](qint64 bytes, qint64 total) {
+            QString progress = QString("Downloading %1: %2/%3 bytes (%4/%5)").arg(m_name).arg(bytes).arg(total).arg(completedCount).arg(m_len);
+            emit debugTextChanged(progress);
+        });
+
     }
     } else {
         QFile file(folderUrl + "/" + filename);

@@ -26,8 +26,10 @@ private:
     QNetworkAccessManager* manager;
     QString folderUrl;
     QString remoteUrl;
+    int completedCount;
 
 signals:
+    void debugTextChanged(QString msg);
 };
 
 #endif // DOWNLOADER_H
