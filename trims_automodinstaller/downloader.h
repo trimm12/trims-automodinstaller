@@ -21,6 +21,7 @@ public slots:
     void replyFinished(QNetworkReply*);
     void changeFolderUrl(QString url);
     void changeRemoteUrl(QString url);
+    void updateModList();
 
 private:
     QNetworkAccessManager* manager;
@@ -30,6 +31,7 @@ private:
 
 signals:
     void debugTextChanged(QString msg);
+    void modListTextChanged(QString text);
 };
 
 #endif // DOWNLOADER_H

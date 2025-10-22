@@ -34,45 +34,65 @@ void downloader::replyFinished(QNetworkReply* reply) {
 
     QByteArray data = reply->readAll();
 
+    bool isPreview = reply->property("isPreview").toBool();
     QString filename = reply->property("saveName").toString();
-    if (filename.isEmpty()) {
-        filename = "mods.json";
-        QFile file(folderUrl + "/" + filename);
-        if(file.open(QFile::WriteOnly)) {
-            file.write(data);
-            file.close();
+
+    if (isPreview) {
+        QJsonDocument document = QJsonDocument::fromJson(data);
+        QJsonObject root = document.object();
+        QJsonArray m_list = root.value("mods").toArray();
+        int m_len = m_list.size();
+
+        QString previewText;
+        for (int i = 0; i < m_len; i++) {
+            QJsonObject m_index = m_list[i].toObject();
+            QString m_name = m_index.value("name").toString();
+            QString m_desc = m_index.value("description").toString();
+
+            if (m_desc.isEmpty()) {
+                m_desc = "No Description Found!";
+            }
+
+            previewText += QString("%1. %2 - %3\n").arg(i + 1).arg(m_name, m_desc);
         }
 
-    QJsonDocument document = QJsonDocument::fromJson(data);
-    QJsonObject root = document.object();
-    QJsonArray m_list = root.value("mods").toArray();
-    int m_len = m_list.size();
-
-    for (int i = 0; i < m_len; i++) {
-        completedCount = i;
-        QJsonObject m_index = m_list[i].toObject();
-        QString m_url = m_index.value("cdn_url").toString();
-        QString m_name = m_index.value("jar_name").toString();
-
-        QUrl url(m_url);
-        QNetworkRequest request(url);
-        request.setRawHeader("User-Agent", "Mozilla/5.0");
-        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
-        request.setRawHeader("Accept", "*/*");
-        request.setRawHeader("Referer", "https://www.curseforge.com/");
-        QNetworkReply *reply = manager->get(request);
-        reply->setProperty("saveName", m_name);
-
-        QObject::connect(reply, &QNetworkReply::finished, this, [this]() {
-            completedCount++;
-        });
-
-        QObject::connect(reply, &QNetworkReply::downloadProgress, this, [this, m_name, reply, m_len](qint64 bytes, qint64 total) {
-            QString progress = QString("Downloading %1: %2/%3 bytes (%4/%5)").arg(m_name).arg(bytes).arg(total).arg(completedCount).arg(m_len);
-            emit debugTextChanged(progress);
-        });
-
+        emit modListTextChanged(previewText);
     }
+
+
+    else if (filename.isEmpty()) {
+
+        QJsonDocument document = QJsonDocument::fromJson(data);
+        QJsonObject root = document.object();
+        QJsonArray m_list = root.value("mods").toArray();
+        int m_len = m_list.size();
+
+        for (int i = 0; i < m_len; i++) {
+            completedCount = i;
+            QJsonObject m_index = m_list[i].toObject();
+            QString m_url = m_index.value("cdn_url").toString();
+            QString m_name = m_index.value("jar_name").toString();
+
+            QUrl url(m_url);
+            QNetworkRequest request(url);
+            request.setRawHeader("User-Agent", "Mozilla/5.0");
+            request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+            request.setRawHeader("Accept", "*/*");
+            request.setRawHeader("Referer", "https://www.curseforge.com/");
+            QNetworkReply *reply = manager->get(request);
+            reply->setProperty("saveName", m_name);
+
+            QObject::connect(reply, &QNetworkReply::finished, this, [this]() {
+                completedCount++;
+            });
+
+            QObject::connect(reply, &QNetworkReply::downloadProgress, this, [this, m_name, reply, m_len](qint64 bytes, qint64 total) {
+                QString progress = QString("Downloading %1: %2/%3 bytes (%4/%5)").arg(m_name).arg(bytes).arg(total).arg(completedCount).arg(m_len);
+                emit debugTextChanged(progress);
+                emit modListTextChanged(progress);
+            });
+
+        }
     } else {
         QFile file(folderUrl + "/" + filename);
         if(file.open(QFile::WriteOnly)) {
@@ -92,4 +112,17 @@ void downloader::changeFolderUrl(QString url) {
 void downloader::changeRemoteUrl(QString url) {
     remoteUrl = url;
     qDebug() << "Received: Remote Url -> " + remoteUrl;
+    updateModList();
+}
+
+void downloader::updateModList() {
+    if (remoteUrl.isEmpty()) return;
+
+    QUrl url(remoteUrl);
+    QNetworkRequest request(url);
+    request.setRawHeader("User-Agent", "Mozilla/5.0");
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+
+    QNetworkReply* reply = manager->get(request);
+    reply->setProperty("isPreview", true);
 }

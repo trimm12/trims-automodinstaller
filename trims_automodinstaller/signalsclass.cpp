@@ -12,6 +12,7 @@ SignalsClass::SignalsClass(QObject *parent)
     remoteChosen = false;
 
     connect(d, &downloader::debugTextChanged, this, &SignalsClass::debugChange);
+    connect(d, &downloader::modListTextChanged, this, &SignalsClass::modListChange);
 
 }
 
@@ -58,4 +59,9 @@ void SignalsClass::remoteChange(QString remoteUrl) {
 void SignalsClass::debugChange(QString debugMsg) {
     debugText = debugMsg;
     emit debugTextChanged();
+}
+
+void SignalsClass::modListChange(QString modMsg) {
+    modListText = modMsg;
+    emit modListTextChanged();
 }
