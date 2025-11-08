@@ -6,6 +6,7 @@
 #include <QUrlQuery>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QTimer>
 
 downloader::downloader(QObject *parent)
     : QObject{parent}, manager(nullptr)
@@ -30,6 +31,8 @@ void downloader::doDownload() {
 }
 
 void downloader::replyFinished(QNetworkReply* reply) {
+
+    reply->deleteLater();
 
 
     QByteArray data = reply->readAll();
@@ -67,11 +70,13 @@ void downloader::replyFinished(QNetworkReply* reply) {
         QJsonArray m_list = root.value("mods").toArray();
         int m_len = m_list.size();
 
+        completedCount = 0;
+        totalMods = m_len;
+
         for (int i = 0; i < m_len; i++) {
-            completedCount = i;
             QJsonObject m_index = m_list[i].toObject();
             QString m_url = m_index.value("cdn_url").toString();
-            QString m_name = m_index.value("jar_name").toString();
+            QString m_name = m_index.value("name").toString() + ".jar";
 
             QUrl url(m_url);
             QNetworkRequest request(url);
@@ -79,17 +84,24 @@ void downloader::replyFinished(QNetworkReply* reply) {
             request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             request.setRawHeader("Accept", "*/*");
             request.setRawHeader("Referer", "https://www.curseforge.com/");
-            QNetworkReply *reply = manager->get(request);
-            reply->setProperty("saveName", m_name);
 
-            QObject::connect(reply, &QNetworkReply::finished, this, [this]() {
-                completedCount++;
-            });
+            QTimer::singleShot(i * 500, this, [this, request, m_name, m_len]() {
+                QNetworkReply *modReply = manager->get(request);
+                modReply->setProperty("saveName", m_name);
 
-            QObject::connect(reply, &QNetworkReply::downloadProgress, this, [this, m_name, reply, m_len](qint64 bytes, qint64 total) {
-                QString progress = QString("Downloading %1: %2/%3 bytes (%4/%5)").arg(m_name).arg(bytes).arg(total).arg(completedCount).arg(m_len);
-                emit debugTextChanged(progress);
-                emit modListTextChanged(progress);
+                QObject::connect(modReply, &QNetworkReply::finished, this, [this, modReply]() {
+                    completedCount++;
+                    modReply->deleteLater();
+
+                    if (completedCount >= totalMods) {
+                        emit debugTextChanged(QString("Downloaded all %1 mods!").arg(totalMods));
+                    }
+                });
+
+                QObject::connect(modReply, &QNetworkReply::downloadProgress, this, [this, m_name, m_len](qint64 bytes, qint64 total) {
+                    QString progress = QString("Downloading %1: %2/%3 bytes (%4/%5)").arg(m_name).arg(bytes).arg(total).arg(completedCount + 1).arg(m_len);
+                    emit debugTextChanged(progress);
+                });
             });
 
         }
@@ -100,8 +112,6 @@ void downloader::replyFinished(QNetworkReply* reply) {
             file.close();
         }
     }
-
-    reply->deleteLater();
 }
 
 void downloader::changeFolderUrl(QString url) {

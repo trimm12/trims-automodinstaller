@@ -28,6 +28,7 @@ private:
     QString folderUrl;
     QString remoteUrl;
     int completedCount;
+    int totalMods;
 
 signals:
     void debugTextChanged(QString msg);
