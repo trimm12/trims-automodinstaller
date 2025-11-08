@@ -13,10 +13,15 @@ Insert the URL into the slot and choose the folder to install the mods to and cl
 Example:
 
 {
+
 "modID": 0,
+
 "name": "Mod Name",
+
 "description": "Mod Description",
-"cdn_url": "https://cdn.modrinth.com/data/...
+
+"cdn_url": "https://cdn.modrinth.com/data/.../
+
 }
 
 You can get the CDN from Modrinth by right clicking on the download button (once you have chosen the version and loader) and clicking Copy link/URL address.
